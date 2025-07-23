@@ -10,7 +10,7 @@ collection:
     meta:
       id: fld_a833cce9e2d443f0a617a4660862e57d
       created: 1753185839568
-      modified: 1753187128608
+      modified: 1753247056451
       sortKey: -1753185839569
       description: Operations related to account management (retrieval and balance updates)
     children:
@@ -201,7 +201,7 @@ collection:
         meta:
           id: req_b0629500f0a84ae8856022732c13e1be
           created: 1753185839640
-          modified: 1753186968850
+          modified: 1753247056299
           isPrivate: false
           description: Increases the account's balance by the specified amount.
           sortKey: -1753185839640
@@ -309,13 +309,13 @@ cookieJar:
   meta:
     id: jar_1907233ecf3b239e49715b342068553cae651b04
     created: 1753180585162
-    modified: 1753187128600
+    modified: 1753247056430
 environments:
   name: Base Environment
   meta:
     id: env_1907233ecf3b239e49715b342068553cae651b04
     created: 1753180585154
-    modified: 1753187128605
+    modified: 1753247056448
     isPrivate: false
   data:
     base_url: "{{ _.scheme }}://{{ _.host }}{{ _.base_path }}"
@@ -324,7 +324,7 @@ environments:
       meta:
         id: env_ac1302e330bf4ecb8fbfb69d474a96d9
         created: 1753185839560
-        modified: 1753187128602
+        modified: 1753247056440
         isPrivate: false
         sortKey: 1753185839560
       data:
@@ -785,3 +785,90 @@ spec:
     id: spc_548e02258d5642ffa86d549e41bf847f
     created: 1753180585143
     modified: 1753243867376
+testSuites:
+  - name: API Test Suite
+    meta:
+      id: uts_8ee19dc4dd114329a30f5e84c9f6be9d
+      created: 1753245977517
+      modified: 1753246073759
+      sortKey: -1753245977517
+    tests:
+      - name: Create a new account Return 201
+        meta:
+          id: ut_870711df5b4d43b29afa2373e18227bd
+          created: 1753246075832
+          modified: 1753247156518
+          sortKey: -1753246717212.5
+        requestId: req_e57a3aa7bd6940409184d54bd2f239f8
+        code: |-
+          const response = await insomnia.send();
+          expect(response.status).to.equal(201);
+          const account = JSON.parse(response.data);
+          expect(account).to.have.property('account_id').that.is.a('string');
+          expect(account).to.have.property('type').that.is.a('string');
+          expect(account).to.have.property('balance').that.is.a('number');
+      - name: Retrieve a single account Return 200
+        meta:
+          id: ut_b94db76c2fed48c1b0cd4d02446c1d40
+          created: 1753246136394
+          modified: 1753246977159
+          sortKey: -1753246136394
+        requestId: req_2fb82ba879e84e8bbf800edf8f2083e7
+        code: |-
+          const response = await insomnia.send();
+          expect(response.status).to.equal(200);
+          const account = JSON.parse(response.data);
+          expect(account).to.have.property('account_id').that.is.a('string');
+      - name: Health Check Returns 200
+        meta:
+          id: ut_a82fb72990da424f9373982c54685da7
+          created: 1753246339881
+          modified: 1753247154624
+          sortKey: -1753246717213
+        requestId: req_cc49b42a6f9847f5887997cbbf587b72
+        code: |-
+          const response = await insomnia.send();
+          expect(response.status).to.equal(200);
+          const body = response.data;expect(body).to.be.a('string');expect(body.toLowerCase()).to.include('accounts api');
+      - name: Debit an Account Returns 200
+        meta:
+          id: ut_18c7914308b94e41b35e4bca9b42fd29
+          created: 1753246671109
+          modified: 1753247041382
+          sortKey: -1753246671109
+        requestId: req_fa76e1258f7b40f181d2e1e99ea7dad5
+        code: |-
+          const response = await insomnia.send();
+          expect(response.status).to.equal(200);
+          const account = JSON.parse(response.data);
+          expect(account).to.have.property('balance').that.is.a('number');
+      - name: Credit an account Returns 200
+        meta:
+          id: ut_019841f9c21448a9b0937e52a5224020
+          created: 1753246717212
+          modified: 1753247072581
+          sortKey: -1753246717212
+        requestId: req_b0629500f0a84ae8856022732c13e1be
+        code: >-
+          const response = await
+          insomnia.send();expect(response.status).to.equal(200);
+
+          const account = JSON.parse(response.data);
+
+          expect(account).to.have.property('balance').that.is.a('number');
+      - name: List all accounts Returns 200
+        meta:
+          id: ut_48d5871ce4574c3cac5e918866d5bfe1
+          created: 1753246795922
+          modified: 1753247165439
+          sortKey: -1753246403751.5
+        requestId: req_b4bcf77aed974ebd85402b8ca4a5974d
+        code: >-
+          const response = await insomnia.send();
+
+          expect(response.status).to.equal(200);
+
+          const accounts =
+          JSON.parse(response.data);expect(accounts).to.be.an('array');if
+          (accounts.length > 0) {const account =
+          accounts[0];expect(account).to.have.property('account_id');}
